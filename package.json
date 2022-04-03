@@ -1,0 +1,12 @@
+{
+  "name": "public-tech-notes",
+  "version": "1.0.0",
+  "description": "Public Tech Notes",
+  "main": "src/api/server.js",
+  "scripts": {},
+  "author": "Caique Cunha Pereira <caique_cp@hotmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
