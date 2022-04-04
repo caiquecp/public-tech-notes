@@ -3,5 +3,24 @@ version: "3.9"
 services:
   public-tech-notes:
     image: ccpdev/public-tech-notes
+    environment:
+      MONGODB_CONN_URI: $MONGODB_CONN_URI
+      MONGODB_DATABASE: $MONGODB_DATABASE
     ports:
       - "80:8080"
+    networks:
+      - public-tech-notes-network
+
+  database:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass123
+    volumes:
+      - ./tmp/data/mongodb:/data/mongodb
+    networks:
+      - public-tech-notes-network
+
+networks:
+    public-tech-notes-network:
+      driver: bridge

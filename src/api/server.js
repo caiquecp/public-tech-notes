@@ -8,6 +8,6 @@ const app = express();
 app.use(express.json());
 app.use('/notes', noteRouter);
 
-app.listen(config.server.PORT, () => {
-    console.log(`App listening on port ${config.server.PORT}`);
+app.listen(config.PORT, () => {
+    console.log(`App listening on port ${config.PORT}`);
 });

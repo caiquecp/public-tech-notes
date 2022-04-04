@@ -1,5 +1,3 @@
-const fakeDbNotes = [];
-
 class InvalidNoteInputError extends Error { }
 
 const validateNote = (rawNote) => {
@@ -12,21 +10,23 @@ const validateNote = (rawNote) => {
 }
 
 class NoteService {
+    constructor(repository) {
+        this.repository = repository;
+    }
+
     async list() {
-        return fakeDbNotes;
+        return await this.repository.getAll();
     }
 
     async create(rawNote) {
         if (!validateNote(rawNote)) {
             throw new InvalidNoteInputError();
         }
-
-        fakeDbNotes.push(rawNote);
-        return rawNote;
+        return await this.repository.add(rawNote);
     }
 }
 
 module.exports = {
-    NoteService, 
+    NoteService,
     InvalidNoteInputError
 };
