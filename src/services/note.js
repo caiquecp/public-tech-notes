@@ -24,6 +24,10 @@ class NoteService {
         }
         return await this.repository.add(rawNote);
     }
+
+    async deleteAll() {
+        return await this.repository.removeAll();
+    }
 }
 
 module.exports = {

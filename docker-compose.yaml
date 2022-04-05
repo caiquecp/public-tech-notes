@@ -10,17 +10,31 @@ services:
       - "80:8080"
     networks:
       - public-tech-notes-network
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 75M
 
   database:
     image: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: pass123
+    ports:
+      - "27017:27017"
     volumes:
       - ./tmp/data/mongodb:/data/mongodb
     networks:
       - public-tech-notes-network
+    deploy:
+      resources:
+        limits:
+          memory: 150M
+        reservations:
+          memory: 100M
 
 networks:
-    public-tech-notes-network:
-      driver: bridge
+  public-tech-notes-network:
+    driver: bridge

@@ -24,9 +24,24 @@ class NoteRepository {
     async add(note) {
         try {
             await this.client.connect();
-            return await this.client.db(config.MONGODB_DATABASE)
+            const result = await this.client.db(config.MONGODB_DATABASE)
                 .collection('notes')
                 .insertOne(note);
+            note._id = result.insertedId;
+            return note;
+        } catch (err) {
+            console.error(err);
+            await this.client.close();
+        }
+    }
+
+    async removeAll() {
+        try {
+            await this.client.connect();
+            const { deletedCount } = await this.client.db(config.MONGODB_DATABASE)
+                .collection('notes')
+                .deleteMany();
+            return { deletedCount };
         } catch (err) {
             console.error(err);
             await this.client.close();
