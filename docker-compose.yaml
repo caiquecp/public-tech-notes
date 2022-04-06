@@ -21,6 +21,7 @@ services:
 
   public-tech-notes:
     image: ccpdev/public-tech-notes
+    restart: on-failure
     environment:
       MONGODB_CONN_URI: $MONGODB_CONN_URI
       MONGODB_DATABASE: $MONGODB_DATABASE
@@ -39,6 +40,7 @@ services:
 
   nginx:
     image: nginx:latest
+    restart: on-failure
     ports:
       - "3000:3000"
     volumes:
@@ -47,6 +49,12 @@ services:
       - public-tech-notes-network
     depends_on:
       - public-tech-notes
+    deploy:
+      resources:
+        limits:
+          memory: 30M
+        reservations:
+          memory: 15M
       
 networks:
   public-tech-notes-network:
