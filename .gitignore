@@ -131,3 +131,4 @@ dist
 
 # Custom
 tmp/
+__pycache__/
