@@ -2,17 +2,17 @@ version: "3.9"
 
 services:
   database:
-    image: mongo
+    image: mongo:5.0.8
     restart: on-failure
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: pass123
-    ports:
-      - "27017:27017"
+      MONGO_INITDB_ROOT_USERNAME: $MONGODB_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
+    networks:
+      - tech-notes-network
+    expose:
+      - "27017"
     volumes:
       - ./tmp/data/mongodb:/data/mongodb
-    networks:
-      - public-tech-notes-network
     deploy:
       resources:
         limits:
@@ -20,18 +20,19 @@ services:
         reservations:
           memory: 100M
 
-  public-tech-notes:
-    image: ccpdev/public-tech-notes
+  tech-notes-api:
+    image: ccpdev/tech-notes:latest
     restart: on-failure
-    environment:
-      MONGODB_CONN_URI: $MONGODB_CONN_URI
-      MONGODB_DATABASE: $MONGODB_DATABASE
-    expose:
-      - "8080"
-    networks:
-      - public-tech-notes-network
     depends_on:
       - database
+    environment:
+      PORT: $PORT
+      MONGODB_CONN_URI: $MONGODB_CONN_URI
+      MONGODB_DATABASE: $MONGODB_DATABASE
+    networks:
+      - tech-notes-network
+    expose:
+      - "8080"
     deploy:
       resources:
         limits:
@@ -40,23 +41,23 @@ services:
           memory: 75M
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.21.6
     restart: on-failure
+    depends_on:
+      - tech-notes-api
+    networks:
+      - tech-notes-network
     ports:
       - "3000:3000"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - public-tech-notes-network
-    depends_on:
-      - public-tech-notes
     deploy:
       resources:
         limits:
-          memory: 30M
+          memory: 25M
         reservations:
           memory: 15M
       
 networks:
-  public-tech-notes-network:
+  tech-notes-network:
     driver: bridge
